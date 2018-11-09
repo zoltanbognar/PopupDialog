@@ -26,6 +26,19 @@
 import Foundation
 import UIKit
 
+/*!
+ Presentation transition styles for the popup dialog
+ 
+ - center:  Dialog is displayed in the center of the screen - default behaviour
+ - top:     Dialog is displayed in the top of the screen
+ - bottom:  Dialog is displayed in the top of the screen
+ */
+@objc public enum PopupDialogPositionStyle: Int {
+    case center
+    case top
+    case bottom
+}
+
 /// Creates a Popup dialog similar to UIAlertController
 final public class PopupDialog: UIViewController {
 
@@ -41,6 +54,9 @@ final public class PopupDialog: UIViewController {
     /// Width for iPad displays
     fileprivate let preferredWidth: CGFloat
 
+    /// Width for iPad displays
+    fileprivate let positionStyle: PopupDialogPositionStyle
+    
     /// The completion handler
     fileprivate var completion: (() -> Void)?
 
@@ -82,6 +98,7 @@ final public class PopupDialog: UIViewController {
      - parameter image:            The dialog image
      - parameter buttonAlignment:  The dialog button alignment
      - parameter transitionStyle:  The dialog transition style
+     - parameter positionStyle:    The dialog position style
      - parameter preferredWidth:   The preferred width for iPad screens
      - parameter tapGestureDismissal: Indicates if dialog can be dismissed via tap gesture
      - parameter panGestureDismissal: Indicates if dialog can be dismissed via pan gesture
@@ -96,6 +113,7 @@ final public class PopupDialog: UIViewController {
                 image: UIImage? = nil,
                 buttonAlignment: NSLayoutConstraint.Axis = .vertical,
                 transitionStyle: PopupDialogTransitionStyle = .bounceUp,
+                positionStyle: PopupDialogPositionStyle = .center,
                 preferredWidth: CGFloat = 340,
                 tapGestureDismissal: Bool = true,
                 panGestureDismissal: Bool = true,
@@ -112,6 +130,7 @@ final public class PopupDialog: UIViewController {
         self.init(viewController: viewController,
                   buttonAlignment: buttonAlignment,
                   transitionStyle: transitionStyle,
+                  positionStyle: positionStyle,
                   preferredWidth: preferredWidth,
                   tapGestureDismissal: tapGestureDismissal,
                   panGestureDismissal: panGestureDismissal,
@@ -125,6 +144,7 @@ final public class PopupDialog: UIViewController {
      - parameter viewController:   A custom view controller to be displayed
      - parameter buttonAlignment:  The dialog button alignment
      - parameter transitionStyle:  The dialog transition style
+     - parameter positionStyle:    The dialog position style
      - parameter preferredWidth:   The preferred width for iPad screens
      - parameter tapGestureDismissal: Indicates if dialog can be dismissed via tap gesture
      - parameter panGestureDismissal: Indicates if dialog can be dismissed via pan gesture
@@ -137,6 +157,7 @@ final public class PopupDialog: UIViewController {
         viewController: UIViewController,
         buttonAlignment: NSLayoutConstraint.Axis = .vertical,
         transitionStyle: PopupDialogTransitionStyle = .bounceUp,
+        positionStyle: PopupDialogPositionStyle = .center,
         preferredWidth: CGFloat = 340,
         tapGestureDismissal: Bool = true,
         panGestureDismissal: Bool = true,
@@ -145,6 +166,7 @@ final public class PopupDialog: UIViewController {
 
         self.viewController = viewController
         self.preferredWidth = preferredWidth
+        self.positionStyle = positionStyle
         self.hideStatusBar = hideStatusBar
         self.completion = completion
         super.init(nibName: nil, bundle: nil)
@@ -191,7 +213,7 @@ final public class PopupDialog: UIViewController {
 
     /// Replaces controller view with popup view
     public override func loadView() {
-        view = PopupDialogContainerView(frame: UIScreen.main.bounds, preferredWidth: preferredWidth)
+        view = PopupDialogContainerView(frame: UIScreen.main.bounds, preferredWidth: preferredWidth, positionStyle: positionStyle)
     }
 
     public override func viewWillAppear(_ animated: Bool) {
@@ -215,6 +237,13 @@ final public class PopupDialog: UIViewController {
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         removeObservers()
+    }
+
+    override public func viewSafeAreaInsetsDidChange() {
+        if #available(iOS 11.0, *) {
+            super.viewSafeAreaInsetsDidChange()
+            popupContainerView.setupLayout()
+        }
     }
 
     deinit {

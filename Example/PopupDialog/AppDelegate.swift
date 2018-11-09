@@ -41,22 +41,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        pv.messageColor = UIColor(white: 0.8, alpha: 1)
 //
 //        // Customize the container view appearance
-//        let pcv = PopupDialogContainerView.appearance()
+        let pcv = PopupDialogContainerView.appearance()
 //        pcv.backgroundColor = UIColor(red:0.23, green:0.23, blue:0.27, alpha:1.00)
-//        pcv.cornerRadius    = 2
-//        pcv.shadowEnabled   = true
-//        pcv.shadowColor     = .black
-//        pcv.shadowOpacity   = 0.6
-//        pcv.shadowRadius    = 20
-//        pcv.shadowOffset    = CGSize(width: 0, height: 8)
+        pcv.cornerRadius    = 10
+        pcv.shadowEnabled   = true
+        pcv.shadowColor     = .black
+        pcv.shadowOpacity   = 0.6
+        pcv.shadowRadius    = 20
+        pcv.shadowOffset    = CGSize(width: 0, height: 8)
 //
 //        // Customize overlay appearance
-//        let ov = PopupDialogOverlayView.appearance()
-//        ov.blurEnabled     = true
-//        ov.blurRadius      = 30
-//        ov.liveBlurEnabled = true
-//        ov.opacity         = 0.7
-//        ov.color           = .black
+        let ov = PopupDialogOverlayView.appearance()
+        ov.blurEnabled     = false
+        ov.blurRadius      = 30
+        ov.liveBlurEnabled = true
+        ov.opacity         = 0.3
+        ov.color           = .black
 //
 //        // Customize default button appearance
 //        let db = DefaultButton.appearance()

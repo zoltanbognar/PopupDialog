@@ -55,17 +55,17 @@ class ViewController: UIViewController {
 
         // Prepare the popup assets
         let title = "THIS IS THE DIALOG TITLE"
-        let message = "This is the message section of the PopupDialog default view"
+        let message = "This is the message section of the PopupDialog default view" + "This is the message section of the PopupDialog default view" + "This is the message section of the PopupDialog default view" + "This is the message section of the PopupDialog default view"
         let image = UIImage(named: "colorful")
 
         // Create the dialog
-        let popup = PopupDialog(title: title, message: message, image: image, preferredWidth: 580)
+        let popup = PopupDialog(title: title, message: message, image: image,transitionStyle: .slideUp,  positionStyle: .bottom, preferredWidth: self.view.bounds.width)
 
         // Create first button
         let buttonOne = CancelButton(title: "CANCEL") { [weak self] in
             self?.label.text = "You canceled the image dialog"
         }
-        
+
         // Create fourth (shake) button
         let buttonTwo = DefaultButton(title: "SHAKE", dismissOnTap: false) { [weak popup] in
             popup?.shake()
@@ -131,10 +131,11 @@ class ViewController: UIViewController {
 
         // Create the dialog
         let popup = PopupDialog(viewController: ratingVC,
-                                buttonAlignment: .horizontal,
-                                transitionStyle: .bounceDown,
+                                buttonAlignment: .vertical,
+                                transitionStyle: .slideUp,
+                                positionStyle: .top,
                                 tapGestureDismissal: true,
-                                panGestureDismissal: false)
+                                panGestureDismissal: true)
         
         // Create first button
         let buttonOne = CancelButton(title: "CANCEL", height: 60) {

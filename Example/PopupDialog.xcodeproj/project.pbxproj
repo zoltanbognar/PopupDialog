@@ -13,6 +13,9 @@
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
+		7806B34521948C4D0018E151 /* MyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7806B34321948C4D0018E151 /* MyViewController.swift */; };
+		7806B34621948C4D0018E151 /* MyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7806B34421948C4D0018E151 /* MyViewController.xib */; };
+		7806B34721948D500018E151 /* MyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7806B34321948C4D0018E151 /* MyViewController.swift */; };
 		8D7237723E8D5A478A0F9D04 /* Pods_PopupDialog_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9093F7873ABC40A980FF94 /* Pods_PopupDialog_Example.framework */; };
 		C705B7FF1E33A0FE00D042A3 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C705B7FE1E33A0FE00D042A3 /* Tests.swift */; };
 		C75C0D6C1E2D81C700CFC9F3 /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C75C0D6B1E2D81C700CFC9F3 /* FBSnapshotTestCase.framework */; };
@@ -61,6 +64,8 @@
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* PopupDialog_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PopupDialog_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7806B34321948C4D0018E151 /* MyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyViewController.swift; sourceTree = "<group>"; };
+		7806B34421948C4D0018E151 /* MyViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyViewController.xib; sourceTree = "<group>"; };
 		88E457EEA7F98660291F3A23 /* Pods-PopupDialog_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PopupDialog_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PopupDialog_Tests/Pods-PopupDialog_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		C705B7FE1E33A0FE00D042A3 /* Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Tests.swift; path = ../UITests/Tests.swift; sourceTree = SOURCE_ROOT; };
 		C705B8001E34D6FF00D042A3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../UITests/Info.plist; sourceTree = SOURCE_ROOT; };
@@ -150,6 +155,8 @@
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				C79253481D33E2C600A0FCA1 /* RatingViewController.swift */,
 				C79253491D33E2C600A0FCA1 /* RatingViewController.xib */,
+				7806B34321948C4D0018E151 /* MyViewController.swift */,
+				7806B34421948C4D0018E151 /* MyViewController.xib */,
 				C792534C1D34E36D00A0FCA1 /* CosmosDistrib.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
@@ -336,6 +343,7 @@
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 				C792534B1D33E2C600A0FCA1 /* RatingViewController.xib in Resources */,
+				7806B34621948C4D0018E151 /* MyViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,6 +467,7 @@
 				C792534A1D33E2C600A0FCA1 /* RatingViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				7806B34521948C4D0018E151 /* MyViewController.swift in Sources */,
 				C792534D1D34E36D00A0FCA1 /* CosmosDistrib.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -473,6 +482,7 @@
 				C75C0D731E2EA17700CFC9F3 /* RatingViewController.swift in Sources */,
 				C75C0D741E2EA17D00CFC9F3 /* CosmosDistrib.swift in Sources */,
 				C7A6674D1D3D030200DE5036 /* Tests.swift in Sources */,
+				7806B34721948D500018E151 /* MyViewController.swift in Sources */,
 				C7A6674C1D3D030200DE5036 /* CustomViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

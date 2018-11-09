@@ -138,6 +138,9 @@ final public class PopupDialogContainerView: UIView {
     
     // The preferred width for iPads
     fileprivate let preferredWidth: CGFloat
+    
+    // Dialog position on the screen
+    fileprivate let positionStyle: PopupDialogPositionStyle
 
     // MARK: - Constraints
 
@@ -146,8 +149,9 @@ final public class PopupDialogContainerView: UIView {
 
     // MARK: - Initializers
     
-    internal init(frame: CGRect, preferredWidth: CGFloat) {
+    internal init(frame: CGRect, preferredWidth: CGFloat, positionStyle: PopupDialogPositionStyle) {
         self.preferredWidth = preferredWidth
+        self.positionStyle = positionStyle
         super.init(frame: frame)
         setupViews()
     }
@@ -164,34 +168,86 @@ final public class PopupDialogContainerView: UIView {
         addSubview(shadowContainer)
         shadowContainer.addSubview(container)
         container.addSubview(stackView)
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        setupLayout()
+    }
+
+    private var allConstraints: [NSLayoutConstraint] = []
+
+    private enum Metrics {
+        static let padding: CGFloat = 10.0
+    }
+
+    internal func setupLayout() {
+
+        if !allConstraints.isEmpty {
+            NSLayoutConstraint.deactivate(allConstraints)
+            allConstraints.removeAll()
+        }
+        
+        var iphoneMetrics = [
+            "topMargin": Metrics.padding,
+            "bottomMargin": Metrics.padding,
+            "leftMargin": Metrics.padding,
+            "rightMargin": Metrics.padding]
+        
+        if #available(iOS 11.0, *) {
+            let newInsets = self.safeAreaInsets
+            let leftMargin = newInsets.left > 0 ? newInsets.left + Metrics.padding: Metrics.padding
+            let rightMargin = newInsets.right > 0 ? newInsets.right + Metrics.padding: Metrics.padding
+            let topMargin = newInsets.top > 0 ? newInsets.top + Metrics.padding: Metrics.padding
+            let bottomMargin = newInsets.bottom > 0 ? newInsets.bottom + Metrics.padding: Metrics.padding
+            
+            iphoneMetrics = [
+                "topMargin": topMargin,
+                "bottomMargin": bottomMargin,
+                "leftMargin": leftMargin,
+                "rightMargin": rightMargin]
+        }
 
         // Layout views
         let views = ["shadowContainer": shadowContainer, "container": container, "stackView": stackView]
-        var constraints = [NSLayoutConstraint]()
-
+//        var constraints = [NSLayoutConstraint]()
+        
         // Shadow container constraints
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
             let metrics = ["preferredWidth": preferredWidth]
-            constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(>=40)-[shadowContainer(==preferredWidth@900)]-(>=40)-|", options: [], metrics: metrics, views: views)
+            allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(>=40)-[shadowContainer(==preferredWidth@900)]-(>=40)-|", options: [], metrics: metrics, views: views)
         } else {
-            constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(>=10,==20@900)-[shadowContainer(<=340,>=300)]-(>=10,==20@900)-|", options: [], metrics: nil, views: views)
+            if case .center = positionStyle {
+                allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-(>=10,==20@900)-[shadowContainer(<=340,>=300)]-(>=10,==20@900)-|", options: [], metrics: nil, views: views)
+            } else if case .top = positionStyle {
+                allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-leftMargin-[shadowContainer]-rightMargin-|", options: [], metrics: iphoneMetrics, views: views)
+            } else if case .bottom = positionStyle {
+                allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-leftMargin-[shadowContainer]-rightMargin-|", options: [], metrics: iphoneMetrics, views: views)
+            }
         }
-        constraints += [NSLayoutConstraint(item: shadowContainer, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0)]
-        centerYConstraint = NSLayoutConstraint(item: shadowContainer, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)
         
-        if let centerYConstraint = centerYConstraint {
-            constraints.append(centerYConstraint)
+        if case .center = positionStyle {
+            allConstraints += [NSLayoutConstraint(item: shadowContainer, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0)]
+            centerYConstraint = NSLayoutConstraint(item: shadowContainer, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)
+            
+            if let centerYConstraint = centerYConstraint {
+                allConstraints.append(centerYConstraint)
+            }
+        } else if case .top = positionStyle {
+            allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-topMargin-[shadowContainer(>=100)]", options: [], metrics: iphoneMetrics, views: views)
+        } else if case .bottom = positionStyle {
+            allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "V:[shadowContainer(>=100)]-bottomMargin-|", options: [], metrics: iphoneMetrics, views: views)
         }
         
         // Container constraints
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", options: [], metrics: nil, views: views)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", options: [], metrics: nil, views: views)
-
+        allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[container]|", options: [], metrics: iphoneMetrics, views: views)
+        allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", options: [], metrics: iphoneMetrics, views: views)
+        
         // Main stack view constraints
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[stackView]|", options: [], metrics: nil, views: views)
-        constraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[stackView]|", options: [], metrics: nil, views: views)
-
+        allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[stackView]|", options: [], metrics: iphoneMetrics, views: views)
+        allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[stackView]|", options: [], metrics: iphoneMetrics, views: views)
+        
         // Activate constraints
-        NSLayoutConstraint.activate(constraints)
+        NSLayoutConstraint.activate(allConstraints)
     }
 }
