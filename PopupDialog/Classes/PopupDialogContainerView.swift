@@ -90,6 +90,24 @@ final public class PopupDialogContainerView: UIView {
         get { return shadowContainer.layer.shadowPath}
         set { shadowContainer.layer.shadowPath = newValue }
     }
+
+    /// Main padding for dialog when it has top or bottom position
+    @objc public dynamic var mainDialogPadding: CGFloat {
+        get { return metrics.dialogPadding}
+        set { metrics.dialogPadding = newValue }
+    }
+    
+    /// Padding for main stack content
+    @objc public dynamic var mainStackPadding: CGFloat {
+        get { return metrics.mainStackPadding}
+        set { metrics.mainStackPadding = newValue }
+    }
+    
+    /// Spacing for buttons in buttons stack view
+    @objc public dynamic var buttonsStackSpacing: CGFloat {
+        get { return buttonStackView.spacing}
+        set { buttonStackView.spacing = newValue }
+    }
     
     // MARK: - Views
 
@@ -163,7 +181,6 @@ final public class PopupDialogContainerView: UIView {
     // MARK: - View setup
 
     internal func setupViews() {
-
         // Add views
         addSubview(shadowContainer)
         shadowContainer.addSubview(container)
@@ -177,31 +194,37 @@ final public class PopupDialogContainerView: UIView {
 
     private var allConstraints: [NSLayoutConstraint] = []
 
-    private enum Metrics {
-        static let padding: CGFloat = 10.0
+    private class Metrics {
+        var dialogPadding: CGFloat = 10.0
+        var mainStackPadding: CGFloat = 10.0
     }
+    
+    private lazy var metrics: Metrics = {
+        return Metrics()
+    }()
 
-    internal func setupLayout() {
-
+    internal func setupLayout() { // swiftlint:disable:this function_body_length
         if !allConstraints.isEmpty {
             NSLayoutConstraint.deactivate(allConstraints)
             allConstraints.removeAll()
         }
         
         var iphoneMetrics = [
-            "topMargin": Metrics.padding,
-            "bottomMargin": Metrics.padding,
-            "leftMargin": Metrics.padding,
-            "rightMargin": Metrics.padding]
+            "mainStackPadding": metrics.mainStackPadding,
+            "topMargin": metrics.dialogPadding,
+            "bottomMargin": metrics.dialogPadding,
+            "leftMargin": metrics.dialogPadding,
+            "rightMargin": metrics.dialogPadding]
         
         if #available(iOS 11.0, *) {
             let newInsets = self.safeAreaInsets
-            let leftMargin = newInsets.left > 0 ? newInsets.left + Metrics.padding: Metrics.padding
-            let rightMargin = newInsets.right > 0 ? newInsets.right + Metrics.padding: Metrics.padding
-            let topMargin = newInsets.top > 0 ? newInsets.top + Metrics.padding: Metrics.padding
-            let bottomMargin = newInsets.bottom > 0 ? newInsets.bottom + Metrics.padding: Metrics.padding
+            let leftMargin = newInsets.left > 0 ? newInsets.left + metrics.dialogPadding: metrics.dialogPadding
+            let rightMargin = newInsets.right > 0 ? newInsets.right + metrics.dialogPadding: metrics.dialogPadding
+            let topMargin = newInsets.top > 0 ? newInsets.top + metrics.dialogPadding: metrics.dialogPadding
+            let bottomMargin = newInsets.bottom > 0 ? newInsets.bottom + metrics.dialogPadding: metrics.dialogPadding
             
             iphoneMetrics = [
+                "mainStackPadding": metrics.mainStackPadding,
                 "topMargin": topMargin,
                 "bottomMargin": bottomMargin,
                 "leftMargin": leftMargin,
@@ -210,8 +233,7 @@ final public class PopupDialogContainerView: UIView {
 
         // Layout views
         let views = ["shadowContainer": shadowContainer, "container": container, "stackView": stackView]
-//        var constraints = [NSLayoutConstraint]()
-        
+
         // Shadow container constraints
         if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
             let metrics = ["preferredWidth": preferredWidth]
@@ -244,8 +266,8 @@ final public class PopupDialogContainerView: UIView {
         allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[container]|", options: [], metrics: iphoneMetrics, views: views)
         
         // Main stack view constraints
-        allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|[stackView]|", options: [], metrics: iphoneMetrics, views: views)
-        allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|[stackView]|", options: [], metrics: iphoneMetrics, views: views)
+        allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "H:|-mainStackPadding-[stackView]-mainStackPadding-|", options: [], metrics: iphoneMetrics, views: views)
+        allConstraints += NSLayoutConstraint.constraints(withVisualFormat: "V:|-mainStackPadding-[stackView]-mainStackPadding-|", options: [], metrics: iphoneMetrics, views: views)
         
         // Activate constraints
         NSLayoutConstraint.activate(allConstraints)
